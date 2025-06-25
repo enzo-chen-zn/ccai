@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步骤2：理解分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .step-info h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .step-info p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .analysis-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            height: fit-content;
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .panel-title .icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .selected-idea {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .idea-type {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .idea-desc {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .analysis-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.3s ease;
+        }
+
+        .analysis-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .analysis-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .analysis-item p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .insights-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .insight-card {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease;
+        }
+
+        .insight-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .insight-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .insight-title .emoji {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .insight-content {
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .processing-indicator {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .processing-indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: processing 2s infinite;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .next-btn.enabled {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .next-btn.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(72, 187, 120, 0.1);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes processing {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-info">
+                    <h1>🔍 理解分析</h1>
+                    <p>深度解析内容要素，挖掘核心价值点</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="analysis-panel">
+                <div class="panel-title">
+                    <span class="icon">📊</span>
+                    内容分析
+                </div>
+
+                <div class="selected-idea" id="selectedIdea">
+                    <div class="idea-type">加载中...</div>
+                    <div class="idea-desc">加载中...</div>
+                </div>
+
+                <div class="processing-indicator" id="processingIndicator">
+                    <strong>🤖 AI正在深度分析...</strong>
+                    <p>分析目标受众、内容结构、情感要素</p>
+                </div>
+
+                <div id="analysisResults">
+                    <!-- 分析结果将在这里显示 -->
+                </div>
+            </div>
+
+            <div class="insights-panel">
+                <div class="panel-title">
+                    <span class="icon">💡</span>
+                    核心洞察
+                </div>
+
+                <div id="insightsContainer">
+                    <!-- 洞察内容将在这里显示 -->
+                </div>
+
+                <div class="metrics-grid" id="metricsGrid">
+                    <!-- 指标将在这里显示 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn back-btn" onclick="goBack()">← 上一步</button>
+            <button class="nav-btn next-btn" id="nextBtn" onclick="goToNext()">下一步：创意脚本 →</button>
+        </div>
+    </div>
+
+    <script>
+        let projectData = {};
+        let analysisComplete = false;
+
+        // 分析模板
+        const analysisTemplates = {
+            '情感共鸣型': {
+                analyses: [
+                    {
+                        title: '目标受众画像',
+                        content: '25-40岁都市白领，注重情感体验，喜欢有温度的内容，容易被真实故事打动。'
+                    },
+                    {
+                        title: '情感触发点',
+                        content: '家庭温暖、成长励志、友情陪伴等正向情感，通过细腻的情感描述建立共鸣。'
+                    },
+                    {
+                        title: '内容结构',
+                        content: '开头设置情感钩子，中间展开故事情节，结尾升华主题，形成完整的情感弧线。'
+                    }
+                ],
+                insights: [
+                    {
+                        title: '情感共鸣',
+                        emoji: '❤️',
+                        content: '通过真实的生活场景和细腻的情感表达，与观众建立深层次的情感连接。'
+                    },
+                    {
+                        title: '故事张力',
+                        emoji: '📖',
+                        content: '运用起承转合的叙事结构，在情感高潮处形成强烈的记忆点。'
+                    }
+                ],
+                metrics: [
+                    { value: '85%', label: '情感共鸣度' },
+                    { value: '92%', label: '记忆留存率' },
+                    { value: '78%', label: '分享意愿' }
+                ]
+            },
+            '热点追踪型': {
+                analyses: [
+                    {
+                        title: '热点趋势分析',
+                        content: '当前社交媒体热门话题，结合时事热点和流行文化元素，把握传播时机。'
+                    },
+                    {
+                        title: '传播路径',
+                        content: '利用话题标签和KOL传播，在热点生命周期的上升期快速介入。'
+                    },
+                    {
+                        title: '内容角度',
+                        content: '独特视角解读热点，避免同质化，提供新鲜的观点和见解。'
+                    }
+                ],
+                insights: [
+                    {
+                        title: '时效性',
+                        emoji: '⚡',
+                        content: '抓住热点黄金传播期，在话题热度最高时快速发布内容。'
+                    },
+                    {
+                        title: '差异化',
+                        emoji: '🎯',
+                        content: '在众多热点内容中脱颖而出，提供独特的视角和价值。'
+                    }
+                ],
+                metrics: [
+                    { value: '95%', label: '传播速度' },
+                    { value: '88%', label: '话题参与度' },
+                    { value: '82%', label: '病毒传播率' }
+                ]
+            },
+            '教育科普型': {
+                analyses: [
+                    {
+                        title: '知识结构',
+                        content: '系统性的知识框架，从基础概念到深入应用，循序渐进的学习路径。'
+                    },
+                    {
+                        title: '表达方式',
+                        content: '通俗易懂的语言，配合图表和案例，让复杂概念变得简单易懂。'
+                    },
+                    {
+                        title: '实用价值',
+                        content: '提供可操作的方法和技巧，让观众能够立即应用到实际生活中。'
+                    }
+                ],
+                insights: [
+                    {
+                        title: '权威性',
+                        emoji: '🎓',
+                        content: '建立专业可信的形象，通过准确的信息和专业的表达获得信任。'
+                    },
+                    {
+                        title: '实用性',
+                        emoji: '🛠️',
+                        content: '提供实际可用的知识和技能，帮助观众解决具体问题。'
+                    }
+                ],
+                metrics: [
+                    { value: '91%', label: '知识准确度' },
+                    { value: '87%', label: '理解接受度' },
+                    { value: '89%', label: '实用价值' }
+                ]
+            },
+            '娱乐搞笑型': {
+                analyses: [
+                    {
+                        title: '幽默元素',
+                        content: '运用反转、夸张、对比等喜剧技巧，创造意想不到的笑点。'
+                    },
+                    {
+                        title: '节奏控制',
+                        content: '快节奏的剪辑和紧凑的内容安排，保持观众的注意力和兴趣。'
+                    },
+                    {
+                        title: '互动性',
+                        content: '鼓励观众参与和模仿，创造二次传播的机会。'
+                    }
+                ],
+                insights: [
+                    {
+                        title: '娱乐价值',
+                        emoji: '😄',
+                        content: '为观众提供轻松愉快的体验，在娱乐中传递信息。'
+                    },
+                    {
+                        title: '传播力',
+                        emoji: '🚀',
+                        content: '搞笑内容具有天然的传播优势，容易引发分享和讨论。'
+                    }
+                ],
+                metrics: [
+                    { value: '94%', label: '娱乐指数' },
+                    { value: '90%', label: '分享率' },
+                    { value: '86%', label: '完播率' }
+                ]
+            },
+            '创新突破型': {
+                analyses: [
+                    {
+                        title: '技术创新',
+                        content: '运用最新的拍摄技术、特效制作和交互方式，打造前所未见的视觉体验。'
+                    },
+                    {
+                        title: '创意表达',
+                        content: '突破传统表现形式，用全新的视角和方法诠释内容主题。'
+                    },
+                    {
+                        title: '用户体验',
+                        content: '创造沉浸式的观看体验，让观众成为内容的参与者而非旁观者。'
+                    }
+                ],
+                insights: [
+                    {
+                        title: '创新性',
+                        emoji: '🌟',
+                        content: '在内容形式和表达方式上实现突破，引领行业新趋势。'
+                    },
+                    {
+                        title: '记忆度',
+                        emoji: '🧠',
+                        content: '独特的创新元素让内容更容易被记住和传播。'
+                    }
+                ],
+                metrics: [
+                    { value: '96%', label: '创新指数' },
+                    { value: '88%', label: '技术先进性' },
+                    { value: '92%', label: '视觉冲击力' }
+                ]
+            },
+            '品质精致型': {
+                analyses: [
+                    {
+                        title: '制作标准',
+                        content: '高标准的画面质量、音效处理和后期制作，每个细节都精益求精。'
+                    },
+                    {
+                        title: '美学设计',
+                        content: '统一的视觉风格和色彩搭配，营造高级感和专业感。'
+                    },
+                    {
+                        title: '内容深度',
+                        content: '深入挖掘主题内涵，提供有深度、有价值的内容体验。'
+                    }
+                ],
+                insights: [
+                    {
+                        title: '品质感',
+                        emoji: '💎',
+                        content: '通过精致的制作水准体现专业性和可信度。'
+                    },
+                    {
+                        title: '品牌价值',
+                        emoji: '🏆',
+                        content: '高品质内容有助于提升品牌形象和用户认知。'
+                    }
+                ],
+                metrics: [
+                    { value: '98%', label: '制作质量' },
+                    { value: '93%', label: '美学评分' },
+                    { value: '91%', label: '专业度' }
+                ]
+            }
+        };
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjectData();
+            setTimeout(() => {
+                startAnalysis();
+            }, 1000);
+        });
+
+        // 加载项目数据
+        function loadProjectData() {
+            const saved = localStorage.getItem('currentProject');
+            if (saved) {
+                projectData = JSON.parse(saved);
+                
+                if (projectData.selectedIdea) {
+                    const ideaElement = document.getElementById('selectedIdea');
+                    ideaElement.innerHTML = `
+                        <div class="idea-type">${projectData.selectedIdea.icon} ${projectData.selectedIdea.title}</div>
+                        <div class="idea-desc">${projectData.selectedIdea.description}</div>
+                    `;
+                } else {
+                    alert('未找到选择的创意，请重新开始！');
+                    window.location.href = 'step1-idea.html';
+                }
+            } else {
+                alert('未找到项目信息，请重新开始！');
+                window.location.href = 'workflow-flow.html';
+            }
+        }
+
+        // 开始分析
+        function startAnalysis() {
+            const ideaType = projectData.selectedIdea.title;
+            const template = analysisTemplates[ideaType];
+            
+            if (!template) {
+                console.error('未找到对应的分析模板');
+                return;
+            }
+
+            // 隐藏处理指示器
+            setTimeout(() => {
+                document.getElementById('processingIndicator').style.display = 'none';
+                showAnalysisResults(template);
+            }, 3000);
+        }
+
+        // 显示分析结果
+        function showAnalysisResults(template) {
+            const analysisResults = document.getElementById('analysisResults');
+            const insightsContainer = document.getElementById('insightsContainer');
+            const metricsGrid = document.getElementById('metricsGrid');
+
+            // 显示分析项目
+            template.analyses.forEach((analysis, index) => {
+                setTimeout(() => {
+                    const analysisItem = document.createElement('div');
+                    analysisItem.className = 'analysis-item';
+                    analysisItem.innerHTML = `
+                        <h4>${analysis.title}</h4>
+                        <p>${analysis.content}</p>
+                    `;
+                    analysisResults.appendChild(analysisItem);
+                    
+                    setTimeout(() => {
+                        analysisItem.classList.add('visible');
+                    }, 100);
+                }, index * 500);
+            });
+
+            // 显示洞察
+            template.insights.forEach((insight, index) => {
+                setTimeout(() => {
+                    const insightCard = document.createElement('div');
+                    insightCard.className = 'insight-card';
+                    insightCard.innerHTML = `
+                        <div class="insight-title">
+                            <span class="emoji">${insight.emoji}</span>
+                            ${insight.title}
+                        </div>
+                        <div class="insight-content">${insight.content}</div>
+                    `;
+                    insightsContainer.appendChild(insightCard);
+                    
+                    setTimeout(() => {
+                        insightCard.classList.add('visible');
+                    }, 100);
+                }, (template.analyses.length * 500) + (index * 400));
+            });
+
+            // 显示指标
+            template.metrics.forEach((metric, index) => {
+                setTimeout(() => {
+                    const metricItem = document.createElement('div');
+                    metricItem.className = 'metric-item';
+                    metricItem.innerHTML = `
+                        <div class="metric-value">${metric.value}</div>
+                        <div class="metric-label">${metric.label}</div>
+                    `;
+                    metricsGrid.appendChild(metricItem);
+                }, (template.analyses.length * 500) + (template.insights.length * 400) + (index * 200));
+            });
+
+            // 启用下一步按钮
+            setTimeout(() => {
+                analysisComplete = true;
+                document.getElementById('nextBtn').classList.add('enabled');
+                
+                // 保存分析结果
+                projectData.analysisResults = template;
+                projectData.step2Completed = true;
+                localStorage.setItem('currentProject', JSON.stringify(projectData));
+            }, (template.analyses.length * 500) + (template.insights.length * 400) + (template.metrics.length * 200) + 1000);
+        }
+
+        // 返回上一步
+        function goBack() {
+            window.location.href = 'step1-idea.html';
+        }
+
+        // 前往下一步
+        function goToNext() {
+            if (!analysisComplete) {
+                alert('分析还未完成，请稍等！');
+                return;
+            }
+
+            // 更新项目进度
+            projectData.currentStep = 3;
+            localStorage.setItem('currentProject', JSON.stringify(projectData));
+
+            // 跳转到下一步
+            window.location.href = 'step3-script.html';
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                goBack();
+            }
+            
+            if (e.key === 'Enter' && analysisComplete) {
+                goToNext();
+            }
+        });
+    </script>
+</body>
+</html>

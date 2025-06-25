@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步骤3：创意脚本</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .step-info h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .step-info p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .script-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .panel-title .icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .script-generation {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .script-generation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: generating 2s infinite;
+        }
+
+        .generation-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .generation-subtitle {
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .script-content {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            min-height: 400px;
+            position: relative;
+        }
+
+        .script-scene {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .script-scene.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .scene-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .scene-duration {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .scene-content {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .scene-visual {
+            background: #e8f4fd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #0066cc;
+            border-left: 3px solid #0066cc;
+        }
+
+        .scene-audio {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            color: #856404;
+            border-left: 3px solid #ffc107;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .project-summary {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .summary-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .summary-value {
+            font-weight: 600;
+        }
+
+        .script-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .secondary-btn {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+
+        .secondary-btn:hover {
+            background: #e9ecef;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .next-btn.enabled {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .next-btn.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(240, 147, 251, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(240, 147, 251, 0.1);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(240, 147, 251, 0);
+            }
+        }
+
+        @keyframes generating {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes typewriter {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid #667eea;
+            white-space: nowrap;
+            animation: typewriter 2s steps(40, end);
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-info">
+                    <h1>📝 创意脚本</h1>
+                    <p>AI智能生成专业脚本，打造完美内容框架</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="script-panel">
+                <div class="panel-title">
+                    <span class="icon">🎬</span>
+                    脚本生成
+                </div>
+
+                <div class="script-generation" id="generationStatus">
+                    <div class="generation-title">🤖 AI正在创作脚本...</div>
+                    <div class="generation-subtitle">基于分析结果生成个性化内容</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">准备中...</div>
+                </div>
+
+                <div class="script-content" id="scriptContent">
+                    <div style="text-align: center; color: #999; padding: 50px 0;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">📄</div>
+                        <div>脚本生成中，请稍候...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="info-card">
+                    <div class="panel-title">
+                        <span class="icon">📊</span>
+                        项目概览
+                    </div>
+
+                    <div class="project-summary" id="projectSummary">
+                        <!-- 项目信息将在这里显示 -->
+                    </div>
+
+                    <div class="script-stats" id="scriptStats">
+                        <!-- 脚本统计将在这里显示 -->
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn primary-btn" onclick="regenerateScript()">🔄 重新生成</button>
+                        <button class="action-btn secondary-btn" onclick="exportScript()">📥 导出脚本</button>
+                        <button class="action-btn secondary-btn" onclick="previewScript()">👁️ 预览效果</button>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="panel-title">
+                        <span class="icon">💡</span>
+                        创作提示
+                    </div>
+
+                    <div style="background: #f8f9fa; border-radius: 12px; padding: 20px;">
+                        <div style="margin-bottom: 15px;">
+                            <strong>🎯 核心要点：</strong>
+                            <ul style="margin: 10px 0 0 20px; line-height: 1.6;">
+                                <li>开头3秒抓住注意力</li>
+                                <li>保持节奏紧凑有趣</li>
+                                <li>结尾留下深刻印象</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>📱 平台优化：</strong>
+                            <ul style="margin: 10px 0 0 20px; line-height: 1.6;">
+                                <li>适配竖屏观看习惯</li>
+                                <li>字幕清晰易读</li>
+                                <li>音效配合恰当</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <strong>🔥 爆款元素：</strong>
+                            <ul style="margin: 10px 0 0 20px; line-height: 1.6;">
+                                <li>情感共鸣点</li>
+                                <li>互动引导语</li>
+                                <li>记忆点设计</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn back-btn" onclick="goBack()">← 上一步</button>
+            <button class="nav-btn next-btn" id="nextBtn" onclick="goToNext()">下一步：制作完成 →</button>
+        </div>
+    </div>
+
+    <script>
+        let projectData = {};
+        let scriptGenerated = false;
+        let currentScript = null;
+
+        // 脚本模板
+        const scriptTemplates = {
+            '情感共鸣型': {
+                scenes: [
+                    {
+                        title: '开场引入',
+                        duration: '0-5秒',
+                        content: '温暖的画面开场，配合轻柔的背景音乐，营造舒适的观看氛围。',
+                        visual: '画面：温馨的生活场景，柔和的光线',
+                        audio: '音乐：轻柔的钢琴曲，营造温暖氛围'
+                    },
+                    {
+                        title: '情感铺垫',
+                        duration: '5-15秒',
+                        content: '通过真实的生活片段，引出观众的情感共鸣点，建立情感连接。',
+                        visual: '画面：日常生活的真实瞬间，细腻的情感表达',
+                        audio: '旁白：温暖的声音，娓娓道来的叙述'
+                    },
+                    {
+                        title: '故事高潮',
+                        duration: '15-40秒',
+                        content: '展开核心故事情节，通过起承转合的叙事结构，达到情感高潮。',
+                        visual: '画面：情感冲突与和解，表情特写',
+                        audio: '音乐：情感渐强，配合故事节奏'
+                    },
+                    {
+                        title: '升华结尾',
+                        duration: '40-60秒',
+                        content: '升华主题，给观众留下深刻印象和正向的情感体验。',
+                        visual: '画面：温暖的结局，希望的象征',
+                        audio: '音乐：温暖的尾声，留下余韵'
+                    }
+                ],
+                stats: {
+                    totalDuration: '60秒',
+                    sceneCount: '4个',
+                    emotionalIntensity: '85%',
+                    engagementRate: '92%'
+                }
+            },
+            '热点追踪型': {
+                scenes: [
+                    {
+                        title: '热点切入',
+                        duration: '0-3秒',
+                        content: '快速切入当前热点话题，用醒目的标题和画面抓住注意力。',
+                        visual: '画面：热点相关的醒目视觉元素',
+                        audio: '音效：紧张刺激的开场音效'
+                    },
+                    {
+                        title: '观点阐述',
+                        duration: '3-20秒',
+                        content: '提出独特的观点和见解，与其他内容形成差异化。',
+                        visual: '画面：数据图表，关键信息展示',
+                        audio: '旁白：清晰有力的观点表达'
+                    },
+                    {
+                        title: '深度分析',
+                        duration: '20-45秒',
+                        content: '深入分析热点背后的原因和影响，提供有价值的洞察。',
+                        visual: '画面：分析过程，逻辑展示',
+                        audio: '音乐：思考氛围的背景音'
+                    },
+                    {
+                        title: '互动引导',
+                        duration: '45-60秒',
+                        content: '引导观众参与讨论，提出问题或呼吁行动。',
+                        visual: '画面：互动提示，关注引导',
+                        audio: '旁白：热情的互动邀请'
+                    }
+                ],
+                stats: {
+                    totalDuration: '60秒',
+                    sceneCount: '4个',
+                    viralPotential: '95%',
+                    topicRelevance: '98%'
+                }
+            },
+            '教育科普型': {
+                scenes: [
+                    {
+                        title: '问题提出',
+                        duration: '0-8秒',
+                        content: '提出一个引人思考的问题或现象，激发观众的求知欲。',
+                        visual: '画面：问题相关的视觉展示',
+                        audio: '旁白：引人思考的问题表述'
+                    },
+                    {
+                        title: '知识讲解',
+                        duration: '8-35秒',
+                        content: '系统性地讲解相关知识点，用通俗易懂的方式解释复杂概念。',
+                        visual: '画面：图表、动画、实例演示',
+                        audio: '旁白：清晰的知识讲解'
+                    },
+                    {
+                        title: '实例应用',
+                        duration: '35-50秒',
+                        content: '通过具体实例展示知识的实际应用，增强理解和记忆。',
+                        visual: '画面：实际应用场景展示',
+                        audio: '音效：配合演示的音效'
+                    },
+                    {
+                        title: '总结回顾',
+                        duration: '50-60秒',
+                        content: '总结核心要点，提供进一步学习的建议和资源。',
+                        visual: '画面：要点总结，学习资源展示',
+                        audio: '旁白：总结性的表述'
+                    }
+                ],
+                stats: {
+                    totalDuration: '60秒',
+                    sceneCount: '4个',
+                    knowledgeDensity: '91%',
+                    comprehensibility: '87%'
+                }
+            },
+            '娱乐搞笑型': {
+                scenes: [
+                    {
+                        title: '搞笑开场',
+                        duration: '0-5秒',
+                        content: '用出人意料的搞笑元素快速抓住观众注意力。',
+                        visual: '画面：夸张的表情和动作',
+                        audio: '音效：搞笑的音效配合'
+                    },
+                    {
+                        title: '笑点铺垫',
+                        duration: '5-25秒',
+                        content: '通过一系列小笑点为主要笑点做铺垫，保持观众兴趣。',
+                        visual: '画面：连续的搞笑场景',
+                        audio: '音乐：轻快的背景音乐'
+                    },
+                    {
+                        title: '高潮爆笑',
+                        duration: '25-45秒',
+                        content: '释放最大的笑点，通过反转或夸张达到搞笑高潮。',
+                        visual: '画面：最搞笑的场景和表情',
+                        audio: '音效：强烈的搞笑音效'
+                    },
+                    {
+                        title: '余韵收尾',
+                        duration: '45-60秒',
+                        content: '用温馨或意外的结尾给观众留下深刻印象。',
+                        visual: '画面：温馨或意外的结尾画面',
+                        audio: '音乐：温暖的结尾音乐'
+                    }
+                ],
+                stats: {
+                    totalDuration: '60秒',
+                    sceneCount: '4个',
+                    funnyIndex: '94%',
+                    shareability: '90%'
+                }
+            },
+            '创新突破型': {
+                scenes: [
+                    {
+                        title: '视觉冲击',
+                        duration: '0-8秒',
+                        content: '用前所未见的视觉效果或创新技术震撼开场。',
+                        visual: '画面：创新的视觉特效',
+                        audio: '音效：科技感的音效'
+                    },
+                    {
+                        title: '创意展示',
+                        duration: '8-30秒',
+                        content: '展示核心的创新理念或技术，突出独特性和先进性。',
+                        visual: '画面：创新技术的展示',
+                        audio: '旁白：专业的技术解说'
+                    },
+                    {
+                        title: '体验互动',
+                        duration: '30-50秒',
+                        content: '让观众参与到创新体验中，感受技术带来的变化。',
+                        visual: '画面：互动体验的过程',
+                        audio: '音效：互动反馈音效'
+                    },
+                    {
+                        title: '未来展望',
+                        duration: '50-60秒',
+                        content: '展望技术的未来应用和发展前景，激发想象。',
+                        visual: '画面：未来科技的想象',
+                        audio: '音乐：充满希望的音乐'
+                    }
+                ],
+                stats: {
+                    totalDuration: '60秒',
+                    sceneCount: '4个',
+                    innovationLevel: '96%',
+                    techAdvancement: '88%'
+                }
+            },
+            '品质精致型': {
+                scenes: [
+                    {
+                        title: '精致开场',
+                        duration: '0-10秒',
+                        content: '用高品质的画面和精致的细节展现专业水准。',
+                        visual: '画面：高清精致的视觉呈现',
+                        audio: '音乐：高品质的音乐制作'
+                    },
+                    {
+                        title: '品质展示',
+                        duration: '10-35秒',
+                        content: '深入展示产品或内容的品质细节，突出精工细作。',
+                        visual: '画面：细节特写，品质展示',
+                        audio: '旁白：专业的品质解说'
+                    },
+                    {
+                        title: '价值体现',
+                        duration: '35-50秒',
+                        content: '体现品质背后的价值和意义，建立品牌认知。',
+                        visual: '画面：价值体现的场景',
+                        audio: '音乐：体现价值的音乐'
+                    },
+                    {
+                        title: '品牌升华',
+                        duration: '50-60秒',
+                        content: '升华品牌形象，留下高端专业的印象。',
+                        visual: '画面：品牌形象的升华',
+                        audio: '音乐：品牌主题音乐'
+                    }
+                ],
+                stats: {
+                    totalDuration: '60秒',
+                    sceneCount: '4个',
+                    qualityScore: '98%',
+                    brandValue: '93%'
+                }
+            }
+        };
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjectData();
+            setTimeout(() => {
+                startScriptGeneration();
+            }, 1000);
+        });
+
+        // 加载项目数据
+        function loadProjectData() {
+            const saved = localStorage.getItem('currentProject');
+            if (saved) {
+                projectData = JSON.parse(saved);
+                
+                if (!projectData.step2Completed) {
+                    alert('请先完成理解分析步骤！');
+                    window.location.href = 'step2-analysis.html';
+                    return;
+                }
+                
+                displayProjectSummary();
+            } else {
+                alert('未找到项目信息，请重新开始！');
+                window.location.href = 'workflow-flow.html';
+            }
+        }
+
+        // 显示项目概览
+        function displayProjectSummary() {
+            const summaryContainer = document.getElementById('projectSummary');
+            summaryContainer.innerHTML = `
+                <div class="summary-item">
+                    <span class="summary-label">项目名称</span>
+                    <span class="summary-value">${projectData.title}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">创意类型</span>
+                    <span class="summary-value">${projectData.selectedIdea.title}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">目标平台</span>
+                    <span class="summary-value">短视频平台</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">预计时长</span>
+                    <span class="summary-value">60秒</span>
+                </div>
+            `;
+        }
+
+        // 开始脚本生成
+        function startScriptGeneration() {
+            const progressSteps = [
+                { progress: 20, text: '分析创意类型...' },
+                { progress: 40, text: '构建故事框架...' },
+                { progress: 60, text: '优化场景设计...' },
+                { progress: 80, text: '完善细节描述...' },
+                { progress: 100, text: '脚本生成完成！' }
+            ];
+
+            let currentStep = 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            const updateProgress = () => {
+                if (currentStep < progressSteps.length) {
+                    const step = progressSteps[currentStep];
+                    progressFill.style.width = step.progress + '%';
+                    progressText.textContent = step.text;
+                    currentStep++;
+                    
+                    setTimeout(updateProgress, 1000);
+                } else {
+                    // 生成完成，显示脚本
+                    setTimeout(() => {
+                        document.getElementById('generationStatus').style.display = 'none';
+                        generateScript();
+                    }, 500);
+                }
+            };
+
+            updateProgress();
+        }
+
+        // 生成脚本
+        function generateScript() {
+            const ideaType = projectData.selectedIdea.title;
+            const template = scriptTemplates[ideaType];
+            
+            if (!template) {
+                console.error('未找到对应的脚本模板');
+                return;
+            }
+
+            currentScript = template;
+            displayScript(template);
+            displayScriptStats(template.stats);
+            
+            // 启用下一步按钮
+            setTimeout(() => {
+                scriptGenerated = true;
+                document.getElementById('nextBtn').classList.add('enabled');
+                
+                // 保存脚本结果
+                projectData.scriptResults = template;
+                projectData.step3Completed = true;
+                localStorage.setItem('currentProject', JSON.stringify(projectData));
+            }, 2000);
+        }
+
+        // 显示脚本内容
+        function displayScript(template) {
+            const scriptContent = document.getElementById('scriptContent');
+            scriptContent.innerHTML = '';
+
+            template.scenes.forEach((scene, index) => {
+                setTimeout(() => {
+                    const sceneElement = document.createElement('div');
+                    sceneElement.className = 'script-scene';
+                    sceneElement.innerHTML = `
+                        <div class="scene-header">
+                            <div class="scene-title">场景 ${index + 1}：${scene.title}</div>
+                            <div class="scene-duration">${scene.duration}</div>
+                        </div>
+                        <div class="scene-content">${scene.content}</div>
+                        <div class="scene-visual">📹 ${scene.visual}</div>
+                        <div class="scene-audio">🎵 ${scene.audio}</div>
+                    `;
+                    scriptContent.appendChild(sceneElement);
+                    
+                    setTimeout(() => {
+                        sceneElement.classList.add('visible');
+                    }, 100);
+                }, index * 600);
+            });
+        }
+
+        // 显示脚本统计
+        function displayScriptStats(stats) {
+            const statsContainer = document.getElementById('scriptStats');
+            const statEntries = Object.entries(stats);
+            
+            statEntries.forEach(([key, value], index) => {
+                setTimeout(() => {
+                    const statItem = document.createElement('div');
+                    statItem.className = 'stat-item';
+                    
+                    let label = '';
+                    switch(key) {
+                        case 'totalDuration': label = '总时长'; break;
+                        case 'sceneCount': label = '场景数'; break;
+                        case 'emotionalIntensity': label = '情感强度'; break;
+                        case 'engagementRate': label = '参与度'; break;
+                        case 'viralPotential': label = '传播潜力'; break;
+                        case 'topicRelevance': label = '话题相关'; break;
+                        case 'knowledgeDensity': label = '知识密度'; break;
+                        case 'comprehensibility': label = '理解度'; break;
+                        case 'funnyIndex': label = '搞笑指数'; break;
+                        case 'shareability': label = '分享度'; break;
+                        case 'innovationLevel': label = '创新度'; break;
+                        case 'techAdvancement': label = '技术先进'; break;
+                        case 'qualityScore': label = '品质分数'; break;
+                        case 'brandValue': label = '品牌价值'; break;
+                        default: label = key;
+                    }
+                    
+                    statItem.innerHTML = `
+                        <div class="stat-value">${value}</div>
+                        <div class="stat-label">${label}</div>
+                    `;
+                    statsContainer.appendChild(statItem);
+                }, index * 300);
+            });
+        }
+
+        // 重新生成脚本
+        function regenerateScript() {
+            if (!scriptGenerated) {
+                alert('脚本还在生成中，请稍等！');
+                return;
+            }
+            
+            if (confirm('确定要重新生成脚本吗？这将覆盖当前内容。')) {
+                document.getElementById('generationStatus').style.display = 'block';
+                document.getElementById('scriptContent').innerHTML = `
+                    <div style="text-align: center; color: #999; padding: 50px 0;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">📄</div>
+                        <div>重新生成中，请稍候...</div>
+                    </div>
+                `;
+                document.getElementById('scriptStats').innerHTML = '';
+                
+                scriptGenerated = false;
+                document.getElementById('nextBtn').classList.remove('enabled');
+                
+                setTimeout(() => {
+                    startScriptGeneration();
+                }, 1000);
+            }
+        }
+
+        // 导出脚本
+        function exportScript() {
+            if (!scriptGenerated) {
+                alert('脚本还未生成完成！');
+                return;
+            }
+            
+            let scriptText = `项目：${projectData.title}\n`;
+            scriptText += `创意类型：${projectData.selectedIdea.title}\n\n`;
+            
+            currentScript.scenes.forEach((scene, index) => {
+                scriptText += `场景 ${index + 1}：${scene.title} (${scene.duration})\n`;
+                scriptText += `${scene.content}\n`;
+                scriptText += `视觉：${scene.visual}\n`;
+                scriptText += `音频：${scene.audio}\n\n`;
+            });
+            
+            const blob = new Blob([scriptText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${projectData.title}-脚本.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 预览脚本
+        function previewScript() {
+            if (!scriptGenerated) {
+                alert('脚本还未生成完成！');
+                return;
+            }
+            
+            alert('预览功能开发中，敬请期待！');
+        }
+
+        // 返回上一步
+        function goBack() {
+            window.location.href = 'step2-analysis.html';
+        }
+
+        // 前往下一步
+        function goToNext() {
+            if (!scriptGenerated) {
+                alert('脚本还未生成完成，请稍等！');
+                return;
+            }
+
+            // 更新项目进度
+            projectData.currentStep = 4;
+            localStorage.setItem('currentProject', JSON.stringify(projectData));
+
+            // 跳转到下一步
+            window.location.href = 'step4-complete.html';
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                goBack();
+            }
+            
+            if (e.key === 'Enter' && scriptGenerated) {
+                goToNext();
+            }
+            
+            if (e.key === 'r' || e.key === 'R') {
+                regenerateScript();
+            }
+        });
+    </script>
+</body>
+</html>

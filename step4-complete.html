@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步骤4：制作完成</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            animation: celebration 2s infinite;
+        }
+
+        .step-info h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .step-info p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .success-banner {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: sparkle 3s infinite;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        .success-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .success-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .project-summary {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-content {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title .icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #4ecdc4, #44a08d);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.6s ease forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.8s; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #4ecdc4;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .action-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .action-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .action-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+        }
+
+        .secondary-btn {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+
+        .secondary-btn:hover {
+            background: #e9ecef;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-btn.wechat {
+            background: #07c160;
+            color: white;
+        }
+
+        .share-btn.weibo {
+            background: #e6162d;
+            color: white;
+        }
+
+        .share-btn.douyin {
+            background: #000;
+            color: white;
+        }
+
+        .share-btn.xiaohongshu {
+            background: #ff2442;
+            color: white;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4ecdc4;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes celebration {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(78, 205, 196, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 15px rgba(78, 205, 196, 0.1);
+            }
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .action-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="confetti" id="confetti"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="step-indicator">
+                <div class="step-number">✓</div>
+                <div class="step-info">
+                    <h1>🎉 制作完成</h1>
+                    <p>恭喜！您的创意内容已成功生成</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-banner">
+            <div class="success-icon">🎊</div>
+            <div class="success-title">创作完成！</div>
+            <div class="success-subtitle">您的专属内容已经准备就绪</div>
+            
+            <div class="project-summary" id="projectSummary">
+                <!-- 项目总结将在这里显示 -->
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <span class="card-icon">💡</span>
+                <div class="card-title">创意洞察</div>
+                <div class="card-content" id="ideaInsight">加载中...</div>
+            </div>
+            
+            <div class="summary-card">
+                <span class="card-icon">📊</span>
+                <div class="card-title">分析结果</div>
+                <div class="card-content" id="analysisResult">加载中...</div>
+            </div>
+            
+            <div class="summary-card">
+                <span class="card-icon">📝</span>
+                <div class="card-title">脚本概要</div>
+                <div class="card-content" id="scriptSummary">加载中...</div>
+            </div>
+            
+            <div class="summary-card">
+                <span class="card-icon">🎯</span>
+                <div class="card-title">预期效果</div>
+                <div class="card-content" id="expectedResult">加载中...</div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="section-title">
+                <span class="icon">📋</span>
+                创作历程
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">💡 创意构思</div>
+                        <div class="timeline-desc">基于项目需求，AI分析并生成了多个创意方案</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">🔍 深度分析</div>
+                        <div class="timeline-desc">深入解析内容要素，挖掘核心价值点和受众特征</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">📝 脚本创作</div>
+                        <div class="timeline-desc">AI智能生成专业脚本，构建完整的内容框架</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">🎉 完成制作</div>
+                        <div class="timeline-desc">所有创作环节完成，内容已准备就绪</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <div class="action-panel">
+                <div class="section-title">
+                    <span class="icon">📥</span>
+                    导出与下载
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn primary-btn" onclick="downloadAll()">
+                        <span>📦</span>
+                        下载完整项目
+                    </button>
+                    <button class="action-btn secondary-btn" onclick="downloadScript()">
+                        <span>📝</span>
+                        下载脚本文件
+                    </button>
+                    <button class="action-btn secondary-btn" onclick="downloadReport()">
+                        <span>📊</span>
+                        下载分析报告
+                    </button>
+                    <button class="action-btn secondary-btn" onclick="generateVideo()">
+                        <span>🎬</span>
+                        生成视频预览
+                    </button>
+                </div>
+            </div>
+            
+            <div class="action-panel">
+                <div class="section-title">
+                    <span class="icon">📤</span>
+                    分享与发布
+                </div>
+                
+                <p style="color: #666; margin-bottom: 20px; line-height: 1.5;">
+                    将您的创意作品分享到各大平台，让更多人看到您的精彩内容。
+                </p>
+                
+                <div class="share-options">
+                    <button class="share-btn wechat" onclick="shareToWeChat()">
+                        <span>💬</span>
+                        微信
+                    </button>
+                    <button class="share-btn weibo" onclick="shareToWeibo()">
+                        <span>📱</span>
+                        微博
+                    </button>
+                    <button class="share-btn douyin" onclick="shareToDouyin()">
+                        <span>🎵</span>
+                        抖音
+                    </button>
+                    <button class="share-btn xiaohongshu" onclick="shareToXiaohongshu()">
+                        <span>📷</span>
+                        小红书
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn back-btn" onclick="goBack()">← 上一步</button>
+            <button class="nav-btn restart-btn" onclick="startNew()">🚀 开始新项目</button>
+        </div>
+    </div>
+
+    <script>
+        let projectData = {};
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjectData();
+            createConfetti();
+            setTimeout(() => {
+                displayResults();
+            }, 1000);
+        });
+
+        // 加载项目数据
+        function loadProjectData() {
+            const saved = localStorage.getItem('currentProject');
+            if (saved) {
+                projectData = JSON.parse(saved);
+                
+                if (!projectData.step3Completed) {
+                    alert('请先完成创意脚本步骤！');
+                    window.location.href = 'step3-script.html';
+                    return;
+                }
+                
+                displayProjectSummary();
+            } else {
+                alert('未找到项目信息，请重新开始！');
+                window.location.href = 'workflow-flow.html';
+            }
+        }
+
+        // 显示项目总结
+        function displayProjectSummary() {
+            const summaryContainer = document.getElementById('projectSummary');
+            summaryContainer.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; text-align: center;">
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">${projectData.title}</div>
+                        <div style="opacity: 0.8;">项目名称</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">${projectData.selectedIdea.title}</div>
+                        <div style="opacity: 0.8;">创意类型</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">60秒</div>
+                        <div style="opacity: 0.8;">预计时长</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">4个</div>
+                        <div style="opacity: 0.8;">场景数量</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 显示结果
+        function displayResults() {
+            // 创意洞察
+            document.getElementById('ideaInsight').textContent = 
+                `选择了${projectData.selectedIdea.title}类型，${projectData.selectedIdea.description}`;
+            
+            // 分析结果
+            if (projectData.analysisResults) {
+                const insights = projectData.analysisResults.insights;
+                document.getElementById('analysisResult').textContent = 
+                    `识别了${insights.length}个核心洞察点，包括${insights.map(i => i.title).join('、')}`;
+            }
+            
+            // 脚本概要
+            if (projectData.scriptResults) {
+                const scenes = projectData.scriptResults.scenes;
+                document.getElementById('scriptSummary').textContent = 
+                    `生成了${scenes.length}个场景，涵盖${scenes.map(s => s.title).join('、')}`;
+            }
+            
+            // 预期效果
+            if (projectData.scriptResults && projectData.scriptResults.stats) {
+                const stats = projectData.scriptResults.stats;
+                const statValues = Object.values(stats).filter(v => typeof v === 'string' && v.includes('%'));
+                const avgScore = statValues.length > 0 ? 
+                    Math.round(statValues.reduce((sum, val) => sum + parseInt(val), 0) / statValues.length) : 90;
+                document.getElementById('expectedResult').textContent = 
+                    `预期综合评分${avgScore}%，具有良好的传播潜力和用户参与度`;
+            }
+        }
+
+        // 创建彩带效果
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti');
+            const colors = ['#4ecdc4', '#44a08d', '#667eea', '#764ba2', '#f093fb', '#f5576c'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confettiPiece = document.createElement('div');
+                    confettiPiece.className = 'confetti-piece';
+                    confettiPiece.style.left = Math.random() * 100 + '%';
+                    confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confettiPiece.style.animationDelay = Math.random() * 3 + 's';
+                    confettiPiece.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confettiContainer.appendChild(confettiPiece);
+                    
+                    setTimeout(() => {
+                        confettiPiece.remove();
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+
+        // 下载完整项目
+        function downloadAll() {
+            const projectContent = {
+                projectInfo: {
+                    title: projectData.title,
+                    description: projectData.description,
+                    createdAt: new Date().toLocaleString()
+                },
+                selectedIdea: projectData.selectedIdea,
+                analysisResults: projectData.analysisResults,
+                scriptResults: projectData.scriptResults
+            };
+            
+            const blob = new Blob([JSON.stringify(projectContent, null, 2)], { type: 'application/json' });
+            downloadFile(blob, `${projectData.title}-完整项目.json`);
+        }
+
+        // 下载脚本文件
+        function downloadScript() {
+            if (!projectData.scriptResults) {
+                alert('脚本数据不存在！');
+                return;
+            }
+            
+            let scriptText = `项目：${projectData.title}\n`;
+            scriptText += `创意类型：${projectData.selectedIdea.title}\n\n`;
+            
+            projectData.scriptResults.scenes.forEach((scene, index) => {
+                scriptText += `场景 ${index + 1}：${scene.title} (${scene.duration})\n`;
+                scriptText += `${scene.content}\n`;
+                scriptText += `视觉：${scene.visual}\n`;
+                scriptText += `音频：${scene.audio}\n\n`;
+            });
+            
+            const blob = new Blob([scriptText], { type: 'text/plain' });
+            downloadFile(blob, `${projectData.title}-脚本.txt`);
+        }
+
+        // 下载分析报告
+        function downloadReport() {
+            if (!projectData.analysisResults) {
+                alert('分析数据不存在！');
+                return;
+            }
+            
+            let reportText = `项目分析报告\n`;
+            reportText += `项目名称：${projectData.title}\n`;
+            reportText += `创意类型：${projectData.selectedIdea.title}\n\n`;
+            
+            reportText += `分析结果：\n`;
+            projectData.analysisResults.analyses.forEach((analysis, index) => {
+                reportText += `${index + 1}. ${analysis.title}\n${analysis.content}\n\n`;
+            });
+            
+            reportText += `核心洞察：\n`;
+            projectData.analysisResults.insights.forEach((insight, index) => {
+                reportText += `${index + 1}. ${insight.title}\n${insight.content}\n\n`;
+            });
+            
+            const blob = new Blob([reportText], { type: 'text/plain' });
+            downloadFile(blob, `${projectData.title}-分析报告.txt`);
+        }
+
+        // 生成视频预览
+        function generateVideo() {
+            alert('视频生成功能开发中，敬请期待！\n\n将支持：\n• 自动配音\n• 智能剪辑\n• 特效添加\n• 多平台适配');
+        }
+
+        // 通用下载函数
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 分享到微信
+        function shareToWeChat() {
+            alert('微信分享功能开发中！\n\n将支持：\n• 生成分享海报\n• 一键复制文案\n• 朋友圈适配');
+        }
+
+        // 分享到微博
+        function shareToWeibo() {
+            const text = `刚刚用AI创作了一个${projectData.selectedIdea.title}的内容：${projectData.title}，效果超棒！`;
+            const url = `https://service.weibo.com/share/share.php?title=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        // 分享到抖音
+        function shareToDouyin() {
+            alert('抖音分享功能开发中！\n\n将支持：\n• 直接发布到抖音\n• 自动添加热门标签\n• 最佳发布时间推荐');
+        }
+
+        // 分享到小红书
+        function shareToXiaohongshu() {
+            alert('小红书分享功能开发中！\n\n将支持：\n• 生成精美封面\n• 自动标签推荐\n• 笔记模板生成');
+        }
+
+        // 返回上一步
+        function goBack() {
+            window.location.href = 'step3-script.html';
+        }
+
+        // 开始新项目
+        function startNew() {
+            if (confirm('确定要开始新项目吗？当前项目数据将被保存到历史记录中。')) {
+                // 保存到历史记录
+                const history = JSON.parse(localStorage.getItem('projectHistory') || '[]');
+                history.unshift({
+                    ...projectData,
+                    completedAt: new Date().toISOString()
+                });
+                
+                // 只保留最近10个项目
+                if (history.length > 10) {
+                    history.splice(10);
+                }
+                
+                localStorage.setItem('projectHistory', JSON.stringify(history));
+                localStorage.removeItem('currentProject');
+                
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                goBack();
+            }
+            
+            if (e.key === 'Enter') {
+                startNew();
+            }
+            
+            if (e.key === 'd' || e.key === 'D') {
+                downloadAll();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步骤1：创作想法</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .step-info h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .step-info p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .project-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .project-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .project-info .title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .project-info .description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .ai-thinking {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-thinking::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .ai-thinking h4 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .thinking-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInText 0.5s ease-in 1s forwards;
+        }
+
+        .ideas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .idea-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .idea-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .idea-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .idea-card.selected {
+            border-color: #48bb78;
+            background: rgba(72, 187, 120, 0.05);
+        }
+
+        .idea-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .idea-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .idea-desc {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .next-btn.enabled {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .next-btn.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(72, 187, 120, 0.1);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% {
+                content: '';
+            }
+            40% {
+                content: '.';
+            }
+            60% {
+                content: '..';
+            }
+            80%, 100% {
+                content: '...';
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-info">
+                    <h1>💡 创作想法</h1>
+                    <p>AI正在分析您的需求，生成创意方案</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="project-info" id="projectInfo">
+                <h3>📋 项目信息</h3>
+                <div class="title" id="projectTitle">加载中...</div>
+                <div class="description" id="projectDesc">加载中...</div>
+            </div>
+
+            <div class="ai-thinking">
+                <h4>🤖 AI思考中<span class="loading-dots"></span></h4>
+                <div class="thinking-content" id="thinkingContent">
+                    正在分析您的项目需求，理解核心目标和受众群体，生成多个创意方向供您选择...
+                </div>
+            </div>
+
+            <div class="ideas-grid" id="ideasGrid">
+                <!-- 创意卡片将在这里动态生成 -->
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn back-btn" onclick="goBack()">← 返回流程图</button>
+            <button class="nav-btn next-btn" id="nextBtn" onclick="goToNext()">下一步：理解分析 →</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedIdea = null;
+        let projectData = {};
+
+        // 创意模板
+        const ideaTemplates = [
+            {
+                icon: '🎬',
+                title: '情感共鸣型',
+                description: '通过真实的情感故事，触动观众内心，建立深层次的情感连接，提升品牌认知度。'
+            },
+            {
+                icon: '🔥',
+                title: '热点追踪型',
+                description: '结合当前热门话题和流行趋势，快速抓住用户注意力，实现病毒式传播。'
+            },
+            {
+                icon: '🎯',
+                title: '教育科普型',
+                description: '以知识分享为核心，提供有价值的信息内容，建立专业权威形象。'
+            },
+            {
+                icon: '😄',
+                title: '娱乐搞笑型',
+                description: '运用幽默元素和创意表现，让观众在轻松愉快的氛围中接受信息。'
+            },
+            {
+                icon: '🌟',
+                title: '创新突破型',
+                description: '采用前沿技术和独特视角，打造令人印象深刻的视觉体验。'
+            },
+            {
+                icon: '💎',
+                title: '品质精致型',
+                description: '注重细节和质感，通过高品质的制作水准体现专业性和可信度。'
+            }
+        ];
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjectData();
+            setTimeout(() => {
+                generateIdeas();
+            }, 2000);
+        });
+
+        // 加载项目数据
+        function loadProjectData() {
+            const saved = localStorage.getItem('currentProject');
+            if (saved) {
+                projectData = JSON.parse(saved);
+                document.getElementById('projectTitle').textContent = projectData.title;
+                document.getElementById('projectDesc').textContent = projectData.description;
+            } else {
+                // 如果没有项目数据，返回主页
+                alert('未找到项目信息，请重新开始！');
+                window.location.href = 'workflow-flow.html';
+            }
+        }
+
+        // 生成创意方案
+        function generateIdeas() {
+            const thinkingContent = document.getElementById('thinkingContent');
+            const ideasGrid = document.getElementById('ideasGrid');
+
+            // 更新思考内容
+            thinkingContent.innerHTML = `
+                基于您的项目「${projectData.title}」，我分析了目标受众和市场趋势，
+                为您生成了以下6个创意方向。每个方向都有其独特的优势和适用场景，
+                请选择最符合您期望的创意类型：
+            `;
+
+            // 生成创意卡片
+            ideaTemplates.forEach((idea, index) => {
+                setTimeout(() => {
+                    const ideaCard = document.createElement('div');
+                    ideaCard.className = 'idea-card';
+                    ideaCard.onclick = () => selectIdea(index, ideaCard);
+                    
+                    ideaCard.innerHTML = `
+                        <div class="idea-icon">${idea.icon}</div>
+                        <div class="idea-title">${idea.title}</div>
+                        <div class="idea-desc">${idea.description}</div>
+                    `;
+                    
+                    ideasGrid.appendChild(ideaCard);
+                    
+                    // 触发显示动画
+                    setTimeout(() => {
+                        ideaCard.classList.add('visible');
+                    }, 100);
+                }, index * 300);
+            });
+        }
+
+        // 选择创意
+        function selectIdea(index, cardElement) {
+            // 移除之前的选择
+            document.querySelectorAll('.idea-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // 选择当前卡片
+            cardElement.classList.add('selected');
+            selectedIdea = ideaTemplates[index];
+
+            // 启用下一步按钮
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.classList.add('enabled');
+
+            // 保存选择到项目数据
+            projectData.selectedIdea = selectedIdea;
+            projectData.step1Completed = true;
+            localStorage.setItem('currentProject', JSON.stringify(projectData));
+        }
+
+        // 返回流程图
+        function goBack() {
+            window.location.href = 'workflow-flow.html';
+        }
+
+        // 前往下一步
+        function goToNext() {
+            if (!selectedIdea) {
+                alert('请先选择一个创意方向！');
+                return;
+            }
+
+            // 更新项目进度
+            projectData.currentStep = 2;
+            localStorage.setItem('currentProject', JSON.stringify(projectData));
+
+            // 跳转到下一步
+            window.location.href = 'step2-analysis.html';
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                goBack();
+            }
+            
+            if (e.key === 'Enter' && selectedIdea) {
+                goToNext();
+            }
+            
+            // 数字键选择创意
+            if (e.key >= '1' && e.key <= '6') {
+                const index = parseInt(e.key) - 1;
+                const cards = document.querySelectorAll('.idea-card');
+                if (cards[index]) {
+                    selectIdea(index, cards[index]);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
